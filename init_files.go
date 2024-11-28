@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"path"
 )
 
 type filesInit struct {
@@ -36,10 +37,10 @@ var filesInitDefault = filesInit{
 	SimulationDistance: 9,
 }
 
-func initServerFiles(filesInit filesInit, startScriptName string) {
+func initServerFiles(filesInit filesInit, startScriptName string, serverFolderPath string) {
 	slog.Info("Initialising server files...")
 	if filesInit.CustomStartScript != "" {
-		startScriptPath := ServerMountPath + "/" + startScriptName
+		startScriptPath := path.Join(serverFolderPath, startScriptName)
 		slog.Info("Found custom script in config, writing custom start script " + startScriptPath + " with content: \n" + filesInit.CustomStartScript)
 
 		startScriptFile, err := os.OpenFile(startScriptPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0755)
@@ -62,9 +63,9 @@ func initServerFiles(filesInit filesInit, startScriptName string) {
 			panic("Failed to download server icon from " + filesInit.ServerIconUrl + ", error: " + err.Error())
 		}
 		defer resp.Body.Close()
-		slog.Info("Successfully downloaded server icon from, saving to server folder")
+		slog.Info("Successfully downloaded server icon from" + filesInit.ServerIconUrl + ", saving to server folder")
 
-		iconPath := ServerMountPath + "/server-icon.png"
+		iconPath := serverFolderPath + "/server-icon.png"
 		iconFile, err := os.OpenFile(iconPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0755)
 		if err != nil {
 			panic("Failed to open destination file: " + iconPath + ", error: " + err.Error())
@@ -91,17 +92,24 @@ func initServerFiles(filesInit filesInit, startScriptName string) {
 		"simulation-distance":  filesInit.SimulationDistance,
 	}
 
-	file, err := os.Create(ServerMountPath + "/server.properties")
+	file, err := os.Create(serverFolderPath + "/server.properties")
 	if err != nil {
 		panic("Error creating server.properties: " + err.Error())
 	}
 	defer file.Close()
 
+	slog.Info("Created server.properties, writing content")
+
+	_, err = file.Seek(0, 0)
+	if err != nil {
+		panic("Failed to reset server properties file write pointer to start: " + err.Error())
+	}
 	for key, value := range properties {
 		_, err := file.WriteString(fmt.Sprintf("%s=%v\n", key, value))
 		if err != nil {
-			fmt.Println("Error writing to file:", err)
+			fmt.Println("Error writing to server.properties:", err)
 			return
 		}
 	}
+	slog.Info("Successfully written content to server.properties")
 }

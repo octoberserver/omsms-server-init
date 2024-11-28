@@ -11,12 +11,11 @@ import (
 const (
 	DeploymentTypeZip = "ZIP"
 	DeploymentTypeGit = "GIT"
-
-	ServerMountPath = "/minecraft-server"
 )
 
 var (
 	DeploymentTypes = []string{DeploymentTypeZip, DeploymentTypeGit}
+	ServerMountPath = "/minecraft-server"
 )
 
 type envs struct {
@@ -45,7 +44,7 @@ func main() {
 		}
 	}
 
-	initServerFiles(envs.filesInit, envs.startScriptName)
+	initServerFiles(envs.filesInit, envs.startScriptName, ServerMountPath)
 }
 
 func getEnvs() envs {
@@ -91,8 +90,7 @@ OMSMS_SERVER_DEPLOYMENT_TYPE: %s
 OMSMS_SERVER_DEPLOYMENT_Value: %s
 OMSMS_SERVER_START_SCRIPT_NAME: %s
 OMSMS_SERVER_FILES_INIT: %s
-
-	`, deploymentType, deploymentValue, startScriptName, fileInitString))
+`, deploymentType, deploymentValue, startScriptName, fileInitString))
 
 	return envs{
 		filesInit:       filesInit,

@@ -65,7 +65,7 @@ func downloadAnExtractZip(url string, path string) {
 func extractZipFile(zipMembers []*zip.File, path string) {
 	for _, f := range zipMembers {
 		filePath := filepath.Join(path, f.Name)
-		slog.Info("Extracting file: ", filePath)
+		slog.Debug("Extracting file: " + filePath)
 
 		// Create an empty dir in the destination if the zip file member is an empty dir
 		if f.FileInfo().IsDir() {

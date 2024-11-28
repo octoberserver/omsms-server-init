@@ -1,0 +1,4 @@
+1. Add struct tags to all json decode/encoding structs
+2. Double check all validation code
+3. Add test main function cases for incorrect config/envs/urls
+4. Add unit tests for individual functions
