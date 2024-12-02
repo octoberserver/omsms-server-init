@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func downloadAnExtractZip(url string, path string) {
+func downloadAndExtractZip(url string, path string) {
 	// Get the file form http
 	resp, err := http.Get(url)
 	if err != nil {

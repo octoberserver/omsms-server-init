@@ -63,9 +63,9 @@ func initServerFiles(filesInit filesInit, startScriptName string, serverFolderPa
 			panic("Failed to download server icon from " + filesInit.ServerIconUrl + ", error: " + err.Error())
 		}
 		defer resp.Body.Close()
-		slog.Info("Successfully downloaded server icon from" + filesInit.ServerIconUrl + ", saving to server folder")
+		slog.Info("Successfully downloaded server icon from " + filesInit.ServerIconUrl + ", saving to server folder")
 
-		iconPath := serverFolderPath + "/server-icon.png"
+		iconPath := path.Join(serverFolderPath, "server-icon.png")
 		iconFile, err := os.OpenFile(iconPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0755)
 		if err != nil {
 			panic("Failed to open destination file: " + iconPath + ", error: " + err.Error())
@@ -92,7 +92,7 @@ func initServerFiles(filesInit filesInit, startScriptName string, serverFolderPa
 		"simulation-distance":  filesInit.SimulationDistance,
 	}
 
-	file, err := os.Create(serverFolderPath + "/server.properties")
+	file, err := os.Create(path.Join(serverFolderPath, "server.properties"))
 	if err != nil {
 		panic("Error creating server.properties: " + err.Error())
 	}

@@ -30,7 +30,7 @@ func main() {
 
 	if envs.deploymentType == DeploymentTypeZip {
 		slog.Info("Deploying server from zip file...")
-		downloadAnExtractZip(envs.deploymentValue, ServerMountPath)
+		downloadAndExtractZip(envs.deploymentValue, ServerMountPath)
 	}
 
 	if envs.deploymentType == DeploymentTypeGit {
@@ -74,7 +74,7 @@ func getEnvs() envs {
 		panic("OMSMS_SERVER_DEPLOYMENT_VALUE environment variable not set")
 	}
 	if !isURL(deploymentValue) {
-		panic("Invalid deployment value: " + deploymentValue + " for type: " + deploymentType)
+		panic("Invalid deployment url: " + deploymentValue + " for type: " + deploymentType)
 	}
 
 	startScriptName := os.Getenv("OMSMS_SERVER_START_SCRIPT_NAME")

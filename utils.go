@@ -3,7 +3,7 @@ package main
 import "regexp"
 
 func isURL(str string) bool {
-	re, err := regexp.Compile(`https?://[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)`)
+	re, err := regexp.Compile(`^(https?:\/\/[-a-zA-Z0-9@:%._\+~#=]+)((\/[a-zA-Z0-9.\-_~!$&'()*+,;=:@%]+)+)?\/?([-a-zA-Z0-9-._~=&?%]+)?$`)
 	if err != nil {
 		panic("Failed to compile regex " + err.Error())
 	}
