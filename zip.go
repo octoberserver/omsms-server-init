@@ -2,6 +2,7 @@ package main
 
 import (
 	"archive/zip"
+	"crypto/tls"
 	"io"
 	"log/slog"
 	"net/http"
@@ -12,6 +13,7 @@ import (
 
 func downloadAndExtractZip(url string, path string) {
 	// Get the file form http
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	resp, err := http.Get(url)
 	if err != nil {
 		panic("Failed to download server files from " + url + ", error: " + err.Error())

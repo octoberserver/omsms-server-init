@@ -31,6 +31,7 @@ func main() {
 	if envs.deploymentType == DeploymentTypeZip {
 		slog.Info("Deploying server from zip file...")
 		downloadAndExtractZip(envs.deploymentValue, ServerMountPath)
+		initServerFiles(envs.filesInit, envs.startScriptName, ServerMountPath)
 	}
 
 	if envs.deploymentType == DeploymentTypeGit {
@@ -43,8 +44,6 @@ func main() {
 			panic("Failed to clone repository:" + err.Error())
 		}
 	}
-
-	initServerFiles(envs.filesInit, envs.startScriptName, ServerMountPath)
 }
 
 func getEnvs() envs {
