@@ -7,7 +7,7 @@ COPY . .
 
 RUN CGO_ENABLED=0 go build -buildvcs=false -o /build/omsms-server-init .
 
-FROM scratch
+FROM gcr.io/distroless/base-debian12
 LABEL authors="october1234"
 
 COPY --from=builder /build/omsms-server-init /omsms-server-init
