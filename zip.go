@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func downloadAndExtractZip(url string, path string) {
+func downloadAndExtractZip(url string, distPath string) {
 	// Get the file form http
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	resp, err := http.Get(url)
@@ -52,7 +52,7 @@ func downloadAndExtractZip(url string, path string) {
 			foundTopLevelDir = true
 		} else if dir != topLevelDir {
 			slog.Info("Files have different top-level directories, extracting as normal")
-			extractZipFile(zipMembers, path)
+			extractZipFile(zipMembers, distPath)
 			return
 		}
 	}
@@ -61,7 +61,7 @@ func downloadAndExtractZip(url string, path string) {
 	for i, f := range reader.File {
 		zipMembers[i].Name = strings.Join(strings.Split(f.Name, "/")[1:], "/")
 	}
-	extractZipFile(zipMembers, path)
+	extractZipFile(zipMembers, distPath)
 }
 
 func extractZipFile(zipMembers []*zip.File, path string) {

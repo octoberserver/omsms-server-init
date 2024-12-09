@@ -6,6 +6,7 @@ import (
 	"github.com/go-git/go-git/v5"
 	"log/slog"
 	"os"
+	"path"
 )
 
 const (
@@ -31,6 +32,11 @@ func main() {
 	if envs.deploymentType == DeploymentTypeZip {
 		slog.Info("Deploying server from zip file...")
 		downloadAndExtractZip(envs.deploymentValue, ServerMountPath)
+		err := os.Chmod(path.Join(ServerMountPath, envs.startScriptName), 0755)
+		if err != nil {
+			panic(err)
+		}
+		slog.Info(fmt.Sprintf("Successfully changed file permission for start script: %s", path.Join(ServerMountPath, envs.startScriptName)))
 		initServerFiles(envs.filesInit, envs.startScriptName, ServerMountPath)
 	}
 
