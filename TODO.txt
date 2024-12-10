@@ -1,1 +1,2 @@
-1. Consider splitting filesInit to server.properties init and files init (for custom start script and icon only)
+1. Fix common top level directory detection code
+2. Consider splitting filesInit to server.properties init and files init (for custom start script and icon only)

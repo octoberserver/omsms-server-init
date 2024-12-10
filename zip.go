@@ -33,6 +33,8 @@ func downloadAndExtractZip(url string, distPath string) {
 		panic("Failed to write server zip fil from " + url + " to " + tmpFile.Name() + ", error: " + err.Error())
 	}
 
+	slog.Info("Extracting archive " + tmpFile.Name() + " to " + distPath)
+
 	// Open the ZIP file for extraction
 	reader, err := zip.OpenReader(tmpFile.Name())
 	if err != nil {
@@ -45,7 +47,7 @@ func downloadAndExtractZip(url string, distPath string) {
 	var topLevelDir string
 	foundTopLevelDir := false
 	for _, f := range reader.File {
-		dir, _ := filepath.Split(f.Name)
+		dir := strings.Split(f.Name, "/")[0]
 
 		if !foundTopLevelDir {
 			topLevelDir = dir
@@ -67,7 +69,7 @@ func downloadAndExtractZip(url string, distPath string) {
 func extractZipFile(zipMembers []*zip.File, path string) {
 	for _, f := range zipMembers {
 		filePath := filepath.Join(path, f.Name)
-		slog.Debug("Extracting file: " + filePath)
+		slog.Debug("Extracting file from: " + f.Name + " to: " + filePath)
 
 		// Create an empty dir in the destination if the zip file member is an empty dir
 		if f.FileInfo().IsDir() {
