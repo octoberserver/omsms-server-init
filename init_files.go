@@ -30,7 +30,7 @@ var filesInitDefault = filesInit{
 	EnableCommandBlock: true,
 	OnlineMode:         true,
 	AllowFlight:        false,
-	MaxTickTime:        int64((^uint64(0)) >> 1), // Max value for int64
+	MaxTickTime:        -1,
 	MaxPlayers:         60,
 	SpawnProtection:    0,
 	ViewDistance:       10,
@@ -39,6 +39,19 @@ var filesInitDefault = filesInit{
 
 func initServerFiles(filesInit filesInit, startScriptName string, serverFolderPath string) {
 	slog.Info("Initialising server files...")
+
+	eulaTxt, err := os.OpenFile(path.Join(serverFolderPath, "eula.txt"), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0755)
+	if err != nil {
+		panic("Failed to open eula.txt: " + err.Error())
+	}
+	defer eulaTxt.Close()
+
+	_, err = eulaTxt.WriteAt([]byte("eula=true"), 0)
+	if err != nil {
+		panic("Failed to write eula.txt: " + err.Error())
+	}
+	slog.Info("Successfully written to eula.txt")
+
 	if filesInit.CustomStartScript != "" {
 		startScriptPath := path.Join(serverFolderPath, startScriptName)
 		slog.Info("Found custom script in config, writing custom start script " + startScriptPath + " with content: \n" + filesInit.CustomStartScript)
